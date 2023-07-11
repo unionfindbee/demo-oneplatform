@@ -37,12 +37,12 @@ jobs:
         fail_ci_if_error: true
 
     - name: Build API
-      run: go build -cover -o ./bin/api .
+      run: go build -cover -o ./bin/app .
 
     # Run API in with coverage in background. We configured test mode to output stacktraces in
     # the error responses to improve the output of Mayhem for API.
     - name: Run API
-      run: GOCOVERDIR=coverage_files ./bin/api &
+      run: mkdir coverage_files && GOCOVERDIR=coverage_files ./bin/app &
 
     # Run Mayhem for API
     - name: Run Mayhem for API to check for vulnerabilities
@@ -59,7 +59,7 @@ jobs:
 
     # Kill python if it's still running, ignoring any errors
     - name: Shut down API
-      run: killall api || true
+      run: killall app || true
 
     - name: Consolidate coverage files
       run: go tool covdata textfmt -i coverage_files -o mapi.out
