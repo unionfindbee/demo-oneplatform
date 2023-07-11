@@ -1,0 +1,37 @@
+name: 'Unit tests'
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *' # run at 2 AM UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Create environment to run API
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.20.5' 
+
+    - name: Install dependencies
+      run: go mod download
+     
+    - name: Run unit tests with coverage
+      run: go test ./... -coverprofile unit_tests.out
+
+    - name: Upload unit test coverage to Codecov
+      uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      with:
+        files: unit_tests.out
+        flags: unit-tests
+        fail_ci_if_error: true

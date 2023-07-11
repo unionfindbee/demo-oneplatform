@@ -1,4 +1,4 @@
-name: 'Mapi'
+name: 'Mayhem for API'
 on:
   push:
     branches: [ main ]
@@ -24,18 +24,6 @@ jobs:
     - name: Install dependencies
       run: go mod download
      
-    - name: Run unit tests with coverage
-      run: go test ./... -coverprofile unit_tests.out
-
-    - name: Upload unit test coverage to Codecov
-      uses: codecov/codecov-action@v3
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      with:
-        files: unit_tests.out
-        flags: unit-tests
-        fail_ci_if_error: true
-
     - name: Build API
       run: go build -cover -o ./bin/app .
 
@@ -66,6 +54,8 @@ jobs:
 
     - name: Upload Mayhem coverage to Codecov
       uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         files: mapi.out
         flags: mayhem-for-api-tests
