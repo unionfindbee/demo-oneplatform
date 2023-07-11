@@ -35,8 +35,10 @@ jobs:
         export GOPATH="$HOME/go"
         export GOBIN="$GOPATH/bin"
         mkdir -p "$GOBIN"
-        echo "$GOBIN" >> "$GITHUB_PATH"
         go get github.com/axw/gocov/gocov github.com/AlekSi/gocov-xml
+        sudo mv "$GOBIN/gocov" /usr/local/bin
+        sudo mv "$GOBIN/gocov-xml" /usr/local/bin
+
 
     - name: Convert coverage.out to XML
       run: gocov convert coverage.out | gocov-xml > coverage.xml
