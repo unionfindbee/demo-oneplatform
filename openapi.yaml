@@ -1,0 +1,114 @@
+openapi: 3.0.0
+info:
+  title: Weather API
+  description: This is a simple Weather API.
+  version: 1.0.0
+servers:
+  - url: http://localhost:7070
+paths:
+  /weather:
+    post:
+      summary: Creates a new weather entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Weather'
+      responses:
+        '201':
+          description: Weather entry successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Weather'
+        '400':
+          description: Bad request
+  /weather/{id}:
+    get:
+      summary: Gets a specific weather entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Weather'
+        '404':
+          description: Not found
+    put:
+      summary: Updates a specific weather entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Weather'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Weather'
+        '404':
+          description: Not found
+    delete:
+      summary: Deletes a specific weather entry
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successfully deleted
+        '404':
+          description: Not found
+  /weather-stream:
+    get:
+      summary: Streams weather updates
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Weather'
+        '400':
+          description: Bad request
+components:
+  schemas:
+    Weather:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the weather entry
+        city:
+          type: string
+          description: The city for which the weather is reported
+        temperature:
+          type: number
+          format: float
+          description: The current temperature in the city
+        conditions:
+          type: string
+          description: The current weather conditions in the city
+      required:
+        - city
+        - temperature
+        - conditions

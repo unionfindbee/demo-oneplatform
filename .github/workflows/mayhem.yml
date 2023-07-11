@@ -1,1 +1,87 @@
+name: 'Mayhem for API'
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *' # run at 2 AM UTC
 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Create environment to run API
+    - name: Set up Go
+  - uses: actions/checkout@v3
+  - uses: actions/setup-go@v4
+      with:
+        go-version: '1.16.1' # The Go version to download (if necessary) and use.
+
+
+    - name: Install dependencies
+      run: go mod download
+
+    - name: Build API
+      run: go build -o ./bin/api ./src
+      
+    - name: Run unit tests with coverage
+      run: go test -coverprofile=coverage.out ./...
+
+    - name: Upload unit test coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: coverage.xml
+        flags: unit-tests
+        fail_ci_if_error: true
+
+    # Run API in with coverage in background. We configured test mode to output stacktraces in
+    # the error responses to improve the output of Mayhem for API.
+    - name: Run API
+      run: coverage run --rcfile=coverage.ini --source=./src -m api &
+
+    # Run Mayhem for API
+    - name: Run Mayhem for API to check for vulnerabilities
+      uses: ForAllSecure/mapi-action@v2
+      continue-on-error: true
+      with:
+        mayhem-url: https://app.mayhem.security
+        mayhem-token: ${{ secrets.MAYHEM_TOKEN }}
+        api-url: http://localhost:7070
+        api-spec: openapi.yaml
+        sarif-report: mapi.sarif
+        html-report: mapi.html
+        target: forallsecure/demo-oneplatform/mapi
+
+    # Kill python if it's still running, ignoring any errors
+    - name: Shut down API
+      run: killall api || true
+
+    # codecov action requires a coverage.xml file
+    - name: Generate coverage.xml
+      run: coverage xml
+
+    - name: Upload Mayhem coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: coverage.xml
+        flags: vulnerability-tests
+        name: mayhem
+        fail_ci_if_error: true
+
+    # Archive HTML report
+    - name: Archive Mayhem for API report
+      uses: actions/upload-artifact@v3
+      with:
+        name: mapi-report
+        path: mapi.html
+
+    # Upload SARIF file (only available on public repos or github enterprise)
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: mapi.sarif
