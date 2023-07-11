@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+RUN go build -cover -o main main.go
 
 # Expose port 7070 to the outside world
 EXPOSE 7070

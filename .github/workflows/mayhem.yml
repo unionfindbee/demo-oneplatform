@@ -23,27 +23,26 @@ jobs:
 
     - name: Install dependencies
       run: go mod download
-
-    - name: Build API
-      run: go build -o ./bin/api .
-      
+     
     - name: Run unit tests with coverage
       run: go test ./... -coverprofile unit_tests.out
 
     - name: Upload unit test coverage to Codecov
       uses: codecov/codecov-action@v3
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      # env:
+      #   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         files: unit_tests.out
         flags: unit-tests
         fail_ci_if_error: true
 
+    - name: Build API
+      run: go build -cover -o ./bin/api .
 
     # Run API in with coverage in background. We configured test mode to output stacktraces in
     # the error responses to improve the output of Mayhem for API.
     - name: Run API
-      run: ./bin/api --test --coverage --stacktraces &
+      run: GOCOVERDIR=coverage_files ./bin/api &
 
     # Run Mayhem for API
     - name: Run Mayhem for API to check for vulnerabilities
@@ -62,12 +61,15 @@ jobs:
     - name: Shut down API
       run: killall api || true
 
+    - name: Consolidate coverage files
+      run: go tool covdata textfmt -i coverage_files -o mapi.out
+
     - name: Upload Mayhem coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
         files: coverage.xml
-        flags: vulnerability-tests
-        name: mayhem
+        flags: mayhem-for-api-tests
+        name: mayhem-for-api-tests
         fail_ci_if_error: true
 
     # Archive HTML report
