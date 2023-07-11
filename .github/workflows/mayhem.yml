@@ -29,8 +29,8 @@ jobs:
 
     - name: Upload unit test coverage to Codecov
       uses: codecov/codecov-action@v3
-      # env:
-      #   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         files: unit_tests.out
         flags: unit-tests
@@ -55,9 +55,9 @@ jobs:
         api-spec: openapi.yaml
         sarif-report: mapi.sarif
         html-report: mapi.html
-        target: bengutierrez/demo-oneplatform/mapi
+        target: bengutierrez/demo-oneplatform/mapi # change to forallsecure/demo-oneplatform/mapi
 
-    # Kill python if it's still running, ignoring any errors
+    # Kill if it's still running, ignoring any errors
     - name: Shut down API
       run: killall app || true
 
