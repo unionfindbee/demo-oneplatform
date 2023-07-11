@@ -33,6 +33,7 @@ jobs:
     - name: Use gocover-cobertura to convert coverage.out to XML
       run: |
         go get github.com/t-yuki/gocover-cobertura
+        export PATH=${PATH}:`go env GOPATH`/bin
         gocover-cobertura < coverage.out > coverage.xml
 
     - name: Upload unit test coverage to Codecov
