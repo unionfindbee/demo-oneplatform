@@ -32,6 +32,8 @@ jobs:
 
     - name: Upload unit test coverage to Codecov
       uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
         files: unit_tests.out
         flags: unit-tests
