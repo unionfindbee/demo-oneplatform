@@ -55,7 +55,7 @@ jobs:
         api-spec: openapi.yaml
         sarif-report: mapi.sarif
         html-report: mapi.html
-        target: forallsecure/demo-oneplatform/mapi
+        target: bengutierrez/demo-oneplatform/mapi
 
     # Kill python if it's still running, ignoring any errors
     - name: Shut down API
@@ -67,7 +67,7 @@ jobs:
     - name: Upload Mayhem coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
-        files: coverage.xml
+        files: mapi.out
         flags: mayhem-for-api-tests
         name: mayhem-for-api-tests
         fail_ci_if_error: true
