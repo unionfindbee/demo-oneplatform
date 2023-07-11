@@ -25,7 +25,7 @@ jobs:
       run: go mod download
 
     - name: Build API
-      run: go build -o ./bin/api ./src
+      run: go build -o ./bin/api .
       
     - name: Run unit tests with coverage
       run: go test -coverprofile=coverage.out ./...
