@@ -32,9 +32,11 @@ jobs:
 
     - name: Install gocov and gocov-xml
       run: |
+        export GOPATH="$HOME/go"
+        export GOBIN="$GOPATH/bin"
+        mkdir -p "$GOBIN"
+        echo "$GOBIN" >> "$GITHUB_PATH"
         go get github.com/axw/gocov/gocov github.com/AlekSi/gocov-xml
-        echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
-
 
     - name: Convert coverage.out to XML
       run: gocov convert coverage.out | gocov-xml > coverage.xml
