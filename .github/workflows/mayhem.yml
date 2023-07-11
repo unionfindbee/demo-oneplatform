@@ -60,10 +60,6 @@ jobs:
     - name: Shut down API
       run: killall api || true
 
-    # codecov action requires a coverage.xml file
-    - name: Generate coverage.xml
-      run: coverage xml
-
     - name: Upload Mayhem coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
