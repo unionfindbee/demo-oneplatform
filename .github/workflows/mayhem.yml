@@ -17,11 +17,9 @@ jobs:
 
     # Create environment to run API
     - name: Set up Go
-  - uses: actions/checkout@v3
-  - uses: actions/setup-go@v4
+      uses: actions/setup-go@v4
       with:
         go-version: '1.16.1' # The Go version to download (if necessary) and use.
-
 
     - name: Install dependencies
       run: go mod download
@@ -32,6 +30,12 @@ jobs:
     - name: Run unit tests with coverage
       run: go test -coverprofile=coverage.out ./...
 
+    - name: Install gocov and gocov-xml
+      run: go get github.com/axw/gocov/gocov github.com/AlekSi/gocov-xml
+
+    - name: Convert coverage.out to XML
+      run: gocov convert coverage.out | gocov-xml > coverage.xml
+
     - name: Upload unit test coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
@@ -39,10 +43,11 @@ jobs:
         flags: unit-tests
         fail_ci_if_error: true
 
+
     # Run API in with coverage in background. We configured test mode to output stacktraces in
     # the error responses to improve the output of Mayhem for API.
     - name: Run API
-      run: coverage run --rcfile=coverage.ini --source=./src -m api &
+      run: ./bin/api --test --coverage --stacktraces &
 
     # Run Mayhem for API
     - name: Run Mayhem for API to check for vulnerabilities
