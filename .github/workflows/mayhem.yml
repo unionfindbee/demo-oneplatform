@@ -19,7 +19,8 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
-        go-version: '1.20.5' # The Go version to download (if necessary) and use.
+        go-version: '1.20.5' 
+      run: go version
 
     - name: Install dependencies
       run: go mod download
@@ -28,18 +29,12 @@ jobs:
       run: go build -o ./bin/api .
       
     - name: Run unit tests with coverage
-      run: go test ./... -coverprofile coverage.out
-
-    - name: Use gocover-cobertura to convert coverage.out to XML
-      run: |
-        go get github.com/t-yuki/gocover-cobertura
-        export PATH=${PATH}:`go env GOPATH`/bin
-        gocover-cobertura < coverage.out > coverage.xml
+      run: go test ./... -coverprofile unit_tests.out
 
     - name: Upload unit test coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
-        files: coverage.xml
+        files: unit_tests.out
         flags: unit-tests
         fail_ci_if_error: true
 
