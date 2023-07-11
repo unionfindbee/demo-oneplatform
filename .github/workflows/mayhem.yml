@@ -35,6 +35,7 @@ jobs:
       with:
         files: unit_tests.out
         flags: unit-tests
+        version: "v0.1.15"
         fail_ci_if_error: true
 
 
