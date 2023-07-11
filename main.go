@@ -1,8 +1,13 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
+	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -24,13 +29,44 @@ var upgrader = websocket.Upgrader{
 }
 
 func main() {
+	// Create a context that we can cancel
+	ctx, cancel := context.WithCancel(context.Background())
+
 	r := mux.NewRouter()
 	r.HandleFunc("/weather", createWeather).Methods("POST")
 	r.HandleFunc("/weather/{id}", getWeather).Methods("GET")
 	r.HandleFunc("/weather/{id}", updateWeather).Methods("PUT")
 	r.HandleFunc("/weather/{id}", deleteWeather).Methods("DELETE")
 	r.HandleFunc("/weather-stream", weatherStream)
-	http.ListenAndServe(":7070", r)
+
+	server := http.Server{
+		Addr:    ":7070",
+		Handler: r,
+	}
+
+	go func() {
+		if err := server.ListenAndServe(); err != nil {
+			// We expect errors to happen when the server is Shutdown or closed,
+			// but not in other cases.
+			if err != http.ErrServerClosed {
+				log.Fatalf("ListenAndServe(): %s", err)
+			}
+		}
+	}()
+
+	// Setup the shutdown signal handler
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
+	<-signalChan
+
+	// We received an interrupt/kill signal; shut down gracefully.
+	log.Println("Gracefully shutting down...")
+	if err := server.Shutdown(ctx); err != nil {
+		log.Fatalf("Could not gracefully shutdown the server: %s", err)
+	}
+	cancel()
+
+	log.Println("Server stopped")
 }
 
 func createWeather(w http.ResponseWriter, r *http.Request) {

@@ -47,7 +47,9 @@ jobs:
 
     # Kill if it's still running, ignoring any errors
     - name: Shut down API
-      run: killall app || true
+      run: | 
+        ps aux
+        killall app || true
 
     - name: Consolidate coverage files
       run: go tool covdata textfmt -i coverage_files -o mapi.out
