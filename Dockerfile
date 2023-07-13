@@ -1,5 +1,5 @@
 # Start from the Golang base image as a builder
-FROM golang:1.20.5-bookworm as builder
+FROM golang:1.13.3-buster as builder
 
 # Set the Current Working Directory inside the builder container
 WORKDIR /app
