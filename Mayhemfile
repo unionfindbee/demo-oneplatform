@@ -3,11 +3,7 @@ duration: 60
 project: bengutierrez/demo-oneplatform
 target: mcode
 
-
-
 cmds:
-
-
   - cmd: /app/main
     env:
       - MFUZZ_COMPAT_LEVEL: "2"
@@ -17,5 +13,3 @@ cmds:
       timeout: 2
       client: false
 
-testsuite:
-  - file://app/testsuite
