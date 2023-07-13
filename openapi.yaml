@@ -78,18 +78,6 @@ paths:
           description: Successfully deleted
         '404':
           description: Not found
-  /weather-stream:
-    get:
-      summary: Streams weather updates
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Weather'
-        '400':
-          description: Bad request
 components:
   schemas:
     Weather:
@@ -103,7 +91,7 @@ components:
           description: The city for which the weather is reported
         temperature:
           type: number
-          format: float
+          format: string
           description: The current temperature in the city
         conditions:
           type: string
