@@ -77,8 +77,8 @@ func createWeather(w http.ResponseWriter, r *http.Request) {
 	newWeather.ID = uuid.New().String()
 	WeatherDB[newWeather.ID] = newWeather
 
-	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(newWeather)
+	w.WriteHeader(http.StatusCreated)
 }
 
 func getWeather(w http.ResponseWriter, r *http.Request) {
