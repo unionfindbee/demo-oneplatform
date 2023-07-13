@@ -19,9 +19,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -o main main.go
 # Start from debian:bookworm-slim for the release image
 FROM debian:bookworm-slim
 
-# Set the Current Working Directory inside the release container
-WORKDIR /app
-
 # Copy the binary from the builder container to the release container
 COPY --from=builder /app/ /app/
 
