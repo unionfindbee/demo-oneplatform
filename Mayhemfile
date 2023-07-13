@@ -5,9 +5,9 @@ target: mcode
 
 cmds:
   - cmd: /app/main
-    env:
-      MFUZZ_COMPAT_LEVEL: '2'
-      DISABLE_SMOKETEST: '1'
+    # env:
+    #   MFUZZ_COMPAT_LEVEL: '2'
+    #   DISABLE_SMOKETEST: '1'
     network:
       url: tcp://127.0.0.1:7070
       timeout: 10
