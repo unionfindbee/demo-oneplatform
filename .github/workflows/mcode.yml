@@ -76,6 +76,7 @@ jobs:
           mayhem-url: ${{ secrets.MAYHEM_URL }}
           mayhem-token: ${{ secrets.MAYHEM_TOKEN }}
           args: --image ${{ needs.build.outputs.image }} --file Mayhemfile --duration 60
+          owner: bengutierrez
           sarif-output: sarif
           junit-output: junit
           coverage-output: coverage
@@ -97,4 +98,4 @@ jobs:
           files: coverage/*.lcov
           flags: mayhem-for-code-tests
           name: mayhem-for-code-tests
-          
+
