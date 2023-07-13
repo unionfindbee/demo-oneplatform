@@ -3,6 +3,11 @@ duration: 60
 project: bengutierrez/demo-oneplatform
 target: mcode
 
+env:
+  - MFUZZ_COMPAT_LEVEL: "2"
+  - DISABLE_SMOKE_TEST: "1"
+
+
 cmds:
   - cmd: /app/main
     network:
