@@ -13,6 +13,9 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -58,8 +61,8 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
           labels: ${{ steps.meta.outputs.labels }}
       
-      - name: Get image name
-        run: echo "Image name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}"
+      - name: Echo image name
+        run: echo ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
 
     outputs:
       image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
@@ -68,24 +71,16 @@ jobs:
     needs: build
     name: 'fuzz'
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        mayhemfile:
-          - mayhem/Mayhemfile.lighttpd
-          - mayhem/Mayhemfile.mayhemit
-          # Specify one or many Mayhemfiles here
-
     steps:
       - uses: actions/checkout@v3
 
-      - name: Start analysis for ${{ matrix.mayhemfile }}
+      - name: Start analysis for Weather App
         id: run-mayhem
         uses: ForAllSecure/mcode-action@v1
         with:
           mayhem-url: ${{ secrets.MAYHEM_URL }}
           mayhem-token: ${{ secrets.MAYHEM_TOKEN }}
-          args: --image ${{ needs.build.outputs.image }} --file ${{ matrix.mayhemfile }} --duration 60
+          args: --image ${{ needs.build.outputs.image }} --file Mayhemfile --duration 60
           sarif-output: sarif
           junit-output: junit
           coverage-output: coverage

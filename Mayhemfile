@@ -1,0 +1,11 @@
+image: bengutierrez/demo-oneplatform:latest
+duration: 60                                 
+project: bengutierrez/demo-oneplatform
+target: mcode
+
+cmds:
+  - cmd: /app/main
+    network:
+      url: tcp://localhost:7070
+      timeout: 2
+      client: false
