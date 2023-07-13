@@ -1,4 +1,4 @@
-# Golang Weather Application: Mayhem CI/CD and API Integration
+# Mayhem CI/CD and API Integration
 
 This repository offers a comprehensive example of leveraging the power of ForAllSecure's Mayhem for both Code and API in a GitHub Actions workflow. Mayhem is an automated tool that checks your application's binary, packaged as a containerized Docker image, for performance, reliability, and security issues within a CI/CD pipeline.
 
@@ -24,8 +24,6 @@ This repository consists of two branches: `main` and `vulnerable`. The `main` br
 Note: You may need to adjust your package visibility settings to Public to allow Mayhem to access your Docker image from the GitHub Container Registry. Go to your package in your GitHub repository and select Package Settings. Then, under Package Visibility, set the package to Public.
 
 7. Switch to the vulnerable branch and create a pull request to merge it with the main branch of your forked repository. The Mayhem for Code and API GitHub Actions will automatically begin, building a Docker image of the vulnerable Golang weather application. Mayhem will fuzz the image and conduct regression and behavior testing on the updated target applications. Detailed results can be found on the PR or the Mayhem server, as well as in the Security tab.
-
-Refer to the example [GitHub Actions integration in the repository](link-to-example-in-repository) for detailed steps and code snippets.
 
 ### Reports
 
@@ -58,4 +56,4 @@ If your API server sends back stacktraces in the 500 Internal Server Error respo
 
 ForAllSecure was established with a goal to secure the world’s critical software. The company utilizes patented technology from over a decade of CMU research to ensure software safety. ForAllSecure collaborates with Fortune 1000 companies across various sectors, including aerospace, automotive, and high-tech, as well as the US Department of Defense. The company integrates Mayhem into software development cycles for continuous security assurance. ForAllSecure is profitable and funded through revenue, and is expanding rapidly.
 
-Find out more about us [here](link-to-about-us) or check out our [code security here](link-to-code-security).
+Find out more about us [here](https://www.mayhem.security/) or check out our [code security here](https://www.mayhem.security/).
