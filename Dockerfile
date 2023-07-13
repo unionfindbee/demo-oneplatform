@@ -1,9 +1,6 @@
 # Start from the Golang base image as a builder
 FROM golang:1.13.3-buster as builder
 
-# Set the Current Working Directory inside the builder container
-WORKDIR /app
-
 # Copy go.mod and go.sum files to the workspace
 COPY go.mod go.sum ./
 
@@ -14,7 +11,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -o main main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o app main.go
 
 # # Start from debian:bookworm-slim for the release image
 # FROM debian:bookworm-slim
@@ -26,4 +23,4 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -o main main.go
 # EXPOSE 7070
 
 # Command to run the executable
-CMD ["/app/main"]
+CMD ["/app"]
