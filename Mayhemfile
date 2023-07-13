@@ -1,4 +1,4 @@
-image: bengutierrez/demo-oneplatform:latest
+image: ghcr.io/unionfindbee/demo-oneplatform:latest
 duration: 60                                 
 project: bengutierrez/demo-oneplatform
 target: mcode

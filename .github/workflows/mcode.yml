@@ -1,4 +1,4 @@
-name: Mayhem
+name: Mayhem For Code
 on:
   push:
     branches: [ main ]
