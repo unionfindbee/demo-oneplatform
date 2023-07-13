@@ -35,7 +35,7 @@ jobs:
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
-          password: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -95,5 +95,5 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           files: coverage/*.lcov
-          flags: vulnerability-tests
-          name: mayhem
+          flags: mayhem-for-code-tests
+          name: mayhem-for-code-tests
