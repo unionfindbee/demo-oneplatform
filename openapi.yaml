@@ -86,10 +86,6 @@ paths:
           description: Not found
         '400':
           description: Bad request
-          content:
-            text/plain:
-              schema:
-                type: string
 components:
   schemas:
     Weather:
