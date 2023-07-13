@@ -16,14 +16,14 @@ COPY . .
 # Build the Go app
 RUN CGO_ENABLED=0 GOOS=linux go build -a -o main main.go
 
-# Start from debian:bookworm-slim for the release image
-FROM debian:bookworm-slim
+# # Start from debian:bookworm-slim for the release image
+# FROM debian:bookworm-slim
 
-# Copy the binary from the builder container to the release container
-COPY --from=builder /app/ /app/
+# # Copy the binary from the builder container to the release container
+# COPY --from=builder /app/ /app/
 
-# Expose port 7070 to the outside world
-EXPOSE 7070
+# # Expose port 7070 to the outside world
+# EXPOSE 7070
 
 # Command to run the executable
 CMD ["/app/main"]
