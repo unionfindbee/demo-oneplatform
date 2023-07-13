@@ -3,12 +3,12 @@ duration: 60
 project: bengutierrez/demo-oneplatform
 target: mcode
 
-env:
-  - 
-
 cmds:
   - cmd: /app/main
     network:
       url: tcp://127.0.0.1:7070
       timeout: 2
       client: false
+
+testsuite:
+  - file://app/testsuite

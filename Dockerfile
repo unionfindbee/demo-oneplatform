@@ -23,7 +23,7 @@ FROM debian:bookworm-slim
 WORKDIR /app
 
 # Copy the binary from the builder container to the release container
-COPY --from=builder /app/main /app/main
+COPY --from=builder /app/ /app/
 
 # Expose port 7070 to the outside world
 EXPOSE 7070
