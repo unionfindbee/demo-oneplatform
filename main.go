@@ -77,6 +77,7 @@ func createWeather(w http.ResponseWriter, r *http.Request) {
 	newWeather.ID = uuid.New().String()
 	WeatherDB[newWeather.ID] = newWeather
 
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(newWeather)
 	w.WriteHeader(http.StatusCreated)
 }
@@ -87,6 +88,7 @@ func getWeather(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(weather)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusNotFound)
 }
 
@@ -100,6 +102,7 @@ func updateWeather(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(updatedWeather)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusNotFound)
 }
 
@@ -110,6 +113,7 @@ func deleteWeather(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusNotFound)
 }
 
