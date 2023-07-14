@@ -1,18 +1,16 @@
-FROM fuzzers/go-fuzz:1.2.0
-COPY . .
-RUN go-fuzz-build -libfuzzer -o main.a && \
-    clang -fsanitize=fuzzer main.a -o main.libfuzzer
+# # fuzzer image with go-fuzz
+# FROM fuzzers/go-fuzz:1.2.0 as fuzzer
+# WORKDIR /app
+# COPY . .
+# RUN go mod download
+# RUN go-fuzz-build -libfuzzer -o main.a && \
+#     clang -fsanitize=fuzzer main.a -o main .
 
-# Set to fuzz!
-ENTRYPOINT []
-CMD ["/go/mayhemit.libfuzzer"]
 
-# # Start from the Golang base image as a builder
-# FROM golang:1.13.3-buster as builder
+# Start from the Golang base image as a builder
+FROM golang:1.13.3-buster
 
-# WORKDIR /
-
-# # Copy go.mod and go.sum files to the workspace
+# Copy go.mod and go.sum files to the workspace
 # COPY go.mod go.sum ./
 
 # # Download all dependencies
@@ -21,17 +19,16 @@ CMD ["/go/mayhemit.libfuzzer"]
 # # Copy the source from the current directory to the Working Directory inside the builder container
 # COPY . .
 
-# # Build the Go app
-# RUN CGO_ENABLED=0 GOOS=linux go build -a -o app main.go
+COPY main2.go .
 
-# # Start from debian:bookworm-slim for the release image
-# FROM debian:bookworm-slim
+# Build the Go app
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o app main2.go
 
-# # Copy the binary from the builder container to the release container
-# COPY --from=builder /app/ /app/
+# Start from debian:bookworm-slim for the release image
+FROM debian:bookworm-slim
 
-# # Expose port 7070 to the outside world
-# EXPOSE 7070
+# Expose port 7070 to the outside world
+EXPOSE 7070
 
-# # Command to run the executable
-# CMD ["/app"]
+# Command to run the executable
+CMD ["/app"]
