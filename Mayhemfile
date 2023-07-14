@@ -4,7 +4,7 @@ project: bengutierrez/demo-oneplatform
 target: mcode
 
 cmds:
-  - cmd: /app/main
+  - cmd: /app
     # env:
     #   MFUZZ_COMPAT_LEVEL: '2'
     #   DISABLE_SMOKETEST: '1'
