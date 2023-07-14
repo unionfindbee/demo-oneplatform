@@ -4,15 +4,14 @@ project: bengutierrez/demo-oneplatform
 target: mcode
 
 cmds:
-  - cmd: /go/main.libfuzzer
-    env:
-      MFUZZ_COMPAT_LEVEL: '2'
-      DISABLE_SMOKETEST: '1'
+  - cmd: /app/main
+    # env:
+    #   MFUZZ_COMPAT_LEVEL: '2'
+    #   DISABLE_SMOKETEST: '1'
     network:
       url: tcp://127.0.0.1:7070
       timeout: 2
       client: false
-    libfuzzer: true
     # timeout: 10
 
 testsuite:
