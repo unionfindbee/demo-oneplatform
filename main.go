@@ -78,8 +78,8 @@ func createWeather(w http.ResponseWriter, r *http.Request) {
 	WeatherDB[newWeather.ID] = newWeather
 
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated) // Set the status before encoding the body
 	json.NewEncoder(w).Encode(newWeather)
-	w.WriteHeader(http.StatusCreated)
 }
 
 func getWeather(w http.ResponseWriter, r *http.Request) {
