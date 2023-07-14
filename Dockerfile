@@ -8,7 +8,7 @@
 
 
 # Start from the Golang base image as a builder
-FROM golang:1.13.3-buster
+FROM golang:1.13.3-buster as builder
 
 # Copy go.mod and go.sum files to the workspace
 # COPY go.mod go.sum ./
@@ -19,6 +19,8 @@ FROM golang:1.13.3-buster
 # # Copy the source from the current directory to the Working Directory inside the builder container
 # COPY . .
 
+WORKDIR /
+
 COPY main2.go .
 
 # Build the Go app
@@ -26,6 +28,9 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -o app main2.go
 
 # Start from debian:bookworm-slim for the release image
 FROM debian:bookworm-slim
+
+# Copy the Pre-built binary file from the previous stage
+COPY --from=builder /app /app
 
 # Expose port 7070 to the outside world
 EXPOSE 7070
