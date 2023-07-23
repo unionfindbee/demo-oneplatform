@@ -24,8 +24,12 @@ paths:
                 $ref: '#/components/schemas/Weather'
         '400':
           description: Bad request
+          content:
+            text/plain: {}
         '404':
           description: Not found
+          content:
+            text/plain: {}
   /weather/{id}:
     get:
       summary: Gets a specific weather entry
@@ -44,8 +48,12 @@ paths:
                 $ref: '#/components/schemas/Weather'
         '404':
           description: Not found
+          content:
+            text/plain: {}
         '400':
           description: Bad request
+          content:
+            text/plain: {}
     put:
       summary: Updates a specific weather entry
       parameters:
@@ -69,8 +77,12 @@ paths:
                 $ref: '#/components/schemas/Weather'
         '404':
           description: Not found
+          content:
+            text/plain: {}
         '400':
           description: Bad request
+          content:
+            text/plain: {}
     delete:
       summary: Deletes a specific weather entry
       parameters:
@@ -82,10 +94,16 @@ paths:
       responses:
         '204':
           description: Successfully deleted
+          content:
+            text/plain: {}
         '404':
           description: Not found
+          content:
+            text/plain: {}
         '400':
           description: Bad request
+          content:
+            text/plain: {}
 components:
   schemas:
     Weather:
