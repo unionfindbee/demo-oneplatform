@@ -44,7 +44,6 @@ jobs:
         sarif-report: mapi.sarif
         html-report: mapi.html
         target: bengutierrez/demo-oneplatform/mapi # change to forallsecure/demo-oneplatform/mapi
-        timeout: 300
 
     # Kill if it's still running, ignoring any errors
     - name: Shut down API

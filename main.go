@@ -122,7 +122,7 @@ func createWeather(w http.ResponseWriter, r *http.Request) {
 
 	_, err = db.Exec(query)
 	if err != nil {
-		http.Error(w, "Error executing SQL query", http.StatusInternalServerError)
+		http.Error(w, "Error executing SQL query: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
