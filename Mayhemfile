@@ -1,5 +1,5 @@
 image: ghcr.io/unionfindbee/demo-oneplatform:testing
-duration: 120                                 
+duration: 60                              
 project: bengutierrez/demo-oneplatform
 target: mcode
 
@@ -16,7 +16,6 @@ cmds:
       url: tcp://[::]:7070
       timeout: 2
       client: false
-    # timeout: 10
 
 testsuite:
   - file://testsuite
