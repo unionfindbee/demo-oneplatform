@@ -71,7 +71,11 @@ func main() {
 
 func createWeather(w http.ResponseWriter, r *http.Request) {
 	var newWeather Weather
-	json.NewDecoder(r.Body).Decode(&newWeather)
+	err := json.NewDecoder(r.Body).Decode(&newWeather)
+	if err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
 
 	// Here we generate a new unique ID
 	newWeather.ID = uuid.New().String()
