@@ -24,7 +24,7 @@ WORKDIR /
 COPY main2.go .
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -o app main2.go
+RUN CGO_ENABLED=0 GOOS=linux go build -cover -a -o app main2.go
 
 # Start from debian:bookworm-slim for the release image
 FROM debian:bookworm-slim

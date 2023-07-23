@@ -12,9 +12,6 @@ tasks:
 
 cmds:
   - cmd: /app
-    # env:
-    #   MFUZZ_COMPAT_LEVEL: '2'
-    #   DISABLE_SMOKETEST: '1'
     network:
       url: tcp://[::]:7070
       timeout: 2
