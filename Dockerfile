@@ -8,7 +8,7 @@
 
 
 # Start from the Golang base image as a builder
-FROM golang:1.13.3-buster as builder
+FROM golang:1.21-rc-bookworm as builder
 
 # Copy go.mod and go.sum files to the workspace
 # COPY go.mod go.sum ./
