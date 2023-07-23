@@ -1,5 +1,5 @@
 image: ghcr.io/unionfindbee/demo-oneplatform:testing
-duration: 60                              
+duration: 600                              
 project: bengutierrez/demo-oneplatform
 target: mcode
 
