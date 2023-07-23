@@ -94,8 +94,6 @@ paths:
       responses:
         '204':
           description: Successfully deleted
-          content:
-            text/plain: {}
         '404':
           description: Not found
           content:
