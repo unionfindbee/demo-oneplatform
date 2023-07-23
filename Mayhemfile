@@ -3,7 +3,7 @@ duration: 120
 project: bengutierrez/demo-oneplatform
 target: mcode
 
-advanced_triage: true
+advanced_triage: false
 tasks:
   - name: exploitability_factors
   - name: regression_testing
