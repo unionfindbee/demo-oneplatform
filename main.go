@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -77,9 +78,9 @@ func createWeather(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Check if Temperature is present and valid
-	if newWeather.Temperature == 0 {
-		http.Error(w, "Missing required field: temperature", http.StatusBadRequest)
+	err = newWeather.Validate()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -107,7 +108,18 @@ func getWeather(w http.ResponseWriter, r *http.Request) {
 func updateWeather(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 	var updatedWeather Weather
-	json.NewDecoder(r.Body).Decode(&updatedWeather)
+	err := json.NewDecoder(r.Body).Decode(&updatedWeather)
+	if err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	err = updatedWeather.Validate()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
 	if _, ok := WeatherDB[id]; ok {
 		updatedWeather.ID = id
 		WeatherDB[id] = updatedWeather
@@ -146,4 +158,17 @@ func getLatestWeatherUpdate() Weather {
 		return weather
 	}
 	return Weather{}
+}
+
+func (w *Weather) Validate() error {
+	if w.City == "" {
+		return errors.New("Missing required field: city")
+	}
+	if w.Temperature == 0 {
+		return errors.New("Missing required field: temperature")
+	}
+	if w.Conditions == "" {
+		return errors.New("Missing required field: conditions")
+	}
+	return nil
 }
