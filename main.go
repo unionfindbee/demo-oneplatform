@@ -16,6 +16,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 	_ "github.com/mattn/go-sqlite3"
+	pkgErrors "github.com/pkg/errors" // Aliased
 )
 
 type Weather struct {
@@ -109,14 +110,14 @@ func createWeather(w http.ResponseWriter, r *http.Request) {
 
 	err = newWeather.Validate()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		// Wrap error with stack trace
+		err = pkgErrors.Wrap(err, "Error executing SQL query")
+		http.Error(w, fmt.Sprintf("%+v", err), http.StatusInternalServerError) // return error string with stack trace
 	}
 
 	newWeather.ID = uuid.New().String()
 	WeatherDB[newWeather.ID] = newWeather
 
-	// Dangerous SQL query, opening for SQL injection
 	query := fmt.Sprintf("INSERT INTO weathers (id, city, temperature, conditions) VALUES ('%s', '%s', %f, '%s')",
 		newWeather.ID, newWeather.City, newWeather.Temperature, newWeather.Conditions)
 
