@@ -14,7 +14,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Weather'
+              $ref: '#/components/schemas/WeatherInput'
       responses:
         '201':
           description: Weather entry successfully created
@@ -94,6 +94,24 @@ components:
         id:
           type: string
           description: The unique identifier of the weather entry
+        city:
+          type: string
+          description: The city for which the weather is reported
+        temperature:
+          type: number
+          format: string
+          description: The current temperature in the city
+        conditions:
+          type: string
+          description: The current weather conditions in the city
+      required:
+        - id
+        - city
+        - temperature
+        - conditions
+    WeatherInput:
+      type: object
+      properties:
         city:
           type: string
           description: The city for which the weather is reported
