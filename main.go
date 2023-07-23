@@ -123,11 +123,13 @@ func updateWeather(w http.ResponseWriter, r *http.Request) {
 	if _, ok := WeatherDB[id]; ok {
 		updatedWeather.ID = id
 		WeatherDB[id] = updatedWeather
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(updatedWeather)
-		return
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(map[string]string{"error": "No weather data found for provided id"})
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNotFound)
 }
 
 func deleteWeather(w http.ResponseWriter, r *http.Request) {
