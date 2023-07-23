@@ -91,14 +91,4 @@ jobs:
         with:
           name: junit
           path: junit
-      
-      - name: Check coverage
-        run: ls -l coverage
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          files: coverage/*.lcov
-          flags: mayhem-for-code-tests
-          name: mayhem-for-code-tests
 
