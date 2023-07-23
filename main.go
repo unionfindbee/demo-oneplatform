@@ -77,6 +77,12 @@ func createWeather(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Check if Temperature is present and valid
+	if newWeather.Temperature == 0 {
+		http.Error(w, "Missing required field: temperature", http.StatusBadRequest)
+		return
+	}
+
 	// Here we generate a new unique ID
 	newWeather.ID = uuid.New().String()
 	WeatherDB[newWeather.ID] = newWeather
