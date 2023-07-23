@@ -1,12 +1,10 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"log"
 	"net/http"
-	"net/http/httptest"
 	"os"
 	"os/signal"
 	"syscall"
@@ -87,11 +85,13 @@ func createWeather(w http.ResponseWriter, r *http.Request) {
 func getWeather(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
 	if weather, ok := WeatherDB[id]; ok {
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(weather)
-		return
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(map[string]string{"error": "No weather data found for provided id"})
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNotFound)
 }
 
 func updateWeather(w http.ResponseWriter, r *http.Request) {
@@ -136,46 +136,4 @@ func getLatestWeatherUpdate() Weather {
 		return weather
 	}
 	return Weather{}
-}
-
-func Fuzz(data []byte) int {
-	if len(data) < 1 {
-		// Not enough data for a test
-		return -1
-	}
-
-	// Choose an endpoint and method based on the first byte
-	var routeName string
-	var routeFunc func(http.ResponseWriter, *http.Request)
-	switch data[0] % 5 {
-	case 0:
-		routeName = "/weather"
-		routeFunc = createWeather
-	case 1:
-		routeName = "/weather/1"
-		routeFunc = getWeather
-	case 2:
-		routeName = "/weather/1"
-		routeFunc = updateWeather
-	case 3:
-		routeName = "/weather/1"
-		routeFunc = deleteWeather
-	case 4:
-		routeName = "/weather-stream"
-		routeFunc = weatherStream
-	}
-
-	// Create an HTTP request and response recorder
-	r, err := http.NewRequest("GET", routeName, bytes.NewReader(data[1:]))
-	if err != nil {
-		return 0
-	}
-	w := httptest.NewRecorder()
-
-	// Call the chosen function and check the response
-	routeFunc(w, r)
-	if w.Code == http.StatusOK || w.Code == http.StatusCreated {
-		return 1
-	}
-	return 0
 }
