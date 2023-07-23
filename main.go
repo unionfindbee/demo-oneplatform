@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -13,6 +15,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type Weather struct {
@@ -29,7 +32,18 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
+type User struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+var db *sql.DB
+
 func main() {
+	// Connect to the database
+	db, _ = sql.Open("sqlite3", "./weather.db")
+	createTable()
+
 	// Create a context that we can cancel
 	ctx, cancel := context.WithCancel(context.Background())
 
@@ -70,6 +84,21 @@ func main() {
 	log.Println("Server stopped")
 }
 
+// Create table if it doesn't exist
+func createTable() {
+	query := `CREATE TABLE IF NOT EXISTS weathers (
+		id TEXT PRIMARY KEY,
+		city TEXT,
+		temperature REAL,
+		conditions TEXT
+	);`
+
+	_, err := db.Exec(query)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func createWeather(w http.ResponseWriter, r *http.Request) {
 	var newWeather Weather
 	err := json.NewDecoder(r.Body).Decode(&newWeather)
@@ -84,9 +113,17 @@ func createWeather(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Here we generate a new unique ID
 	newWeather.ID = uuid.New().String()
-	WeatherDB[newWeather.ID] = newWeather
+
+	// Dangerous SQL query, opening for SQL injection
+	query := fmt.Sprintf("INSERT INTO weathers (id, city, temperature, conditions) VALUES ('%s', '%s', %f, '%s')",
+		newWeather.ID, newWeather.City, newWeather.Temperature, newWeather.Conditions)
+
+	_, err = db.Exec(query)
+	if err != nil {
+		http.Error(w, "Error executing SQL query", http.StatusInternalServerError)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated) // Set the status before encoding the body
