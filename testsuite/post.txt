@@ -1,0 +1,9 @@
+POST /weather HTTP/1.1
+Host: localhost:7070
+Content-Type: application/json
+
+{
+    "city": "San Francisco",
+    "temperature": 20,
+    "conditions": "Clear"
+}

@@ -1,0 +1,9 @@
+PUT /weather/123abc HTTP/1.1
+Host: localhost:7070
+Content-Type: application/json
+
+{
+    "city": "Los Angeles",
+    "temperature": 25,
+    "conditions": "Sunny"
+}

@@ -1,0 +1,22 @@
+image: ghcr.io/unionfindbee/demo-oneplatform:latest
+duration: 60
+project: bengutierrez/demo-oneplatform
+target: mcode
+
+advanced_triage: false
+tasks:
+  - name: exploitability_factors
+  - name: regression_testing
+  - name: behavior_testing
+  - name: coverage_analysis
+
+cmds:
+  - cmd: /app
+    network:
+      url: tcp://[::]:7070
+      timeout: 2
+      client: false
+
+testsuite:
+  - file://testsuite
+
