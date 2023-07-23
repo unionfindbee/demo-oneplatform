@@ -114,6 +114,7 @@ func createWeather(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newWeather.ID = uuid.New().String()
+	WeatherDB[newWeather.ID] = newWeather
 
 	// Dangerous SQL query, opening for SQL injection
 	query := fmt.Sprintf("INSERT INTO weathers (id, city, temperature, conditions) VALUES ('%s', '%s', %f, '%s')",
