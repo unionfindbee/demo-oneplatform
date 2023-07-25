@@ -2,14 +2,31 @@ package main
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/json"
+	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/gorilla/mux"
 	"github.com/stretchr/testify/assert"
 )
+
+func TestMain(m *testing.M) {
+	var err error
+	db, err = sql.Open("sqlite3", "./weather_test.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	createTable()
+
+	code := m.Run()
+
+	db.Close()
+	os.Exit(code)
+}
 
 func TestCreateWeather(t *testing.T) {
 	router := mux.NewRouter()
