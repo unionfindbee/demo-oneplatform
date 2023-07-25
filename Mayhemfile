@@ -1,5 +1,5 @@
 image: ghcr.io/unionfindbee/demo-oneplatform:vulnerable
-duration: 60
+duration: 12000
 project: bengutierrez/demo-oneplatform
 target: mcode
 
