@@ -172,13 +172,16 @@ func updateWeather(w http.ResponseWriter, r *http.Request) {
 
 func deleteWeather(w http.ResponseWriter, r *http.Request) {
 	id := mux.Vars(r)["id"]
-	if _, ok := WeatherDB[id]; ok {
-		delete(WeatherDB, id)
-		w.WriteHeader(http.StatusNoContent)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNotFound)
+	weatherToDelete := WeatherDB[id]
+
+	// Here is the null pointer dereference vulnerability:
+	// Trying to access fields of weatherToDelete which can be nil
+	log.Printf("Deleting weather for city: %s", weatherToDelete.City)
+
+	// Delete from the map
+	delete(WeatherDB, id)
+
+	w.WriteHeader(http.StatusNoContent)
 }
 
 func weatherStream(w http.ResponseWriter, r *http.Request) {
